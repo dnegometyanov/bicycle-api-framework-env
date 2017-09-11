@@ -63,14 +63,17 @@ EOF
 
 #### Entry points
 
-2Backend api `http://localhost:8080/`
+Backend api `http://localhost:8080/`
 
 curl request to api example:
 
 ```
 curl -X POST \
-  http://localhost:8080/transaction/em2@ml.com/323.45/ \
+  http://localhost:8080/transaction/test@example.com \
   -H 'authorization: Basic aW5ub3ZlY3M6aW5ub3ZlY3M=' \
   -H 'cache-control: no-cache' \
-  -H 'postman-token: 49f1085c-13ed-f906-9817-0cd43fa20ab2'
+  -H 'content-type: application/json' \
+  -d '{
+	"amount": 123.45
+}'
 ```
