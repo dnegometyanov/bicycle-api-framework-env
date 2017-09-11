@@ -36,10 +36,6 @@ b5de63d05192        bicycleapiframeworkenv_kibana          "/bin/sh -c kibana...
 
 6. Import project mysql database (use your container name instead of `bicycleapiframeworkenv_php_1` if needed):
 
-Import `/db-schema/schema.sql` to `bicycleapiframeworkenv_mysql_1` container via `PHPMyadmin`
-
-Or
-
 Put test OHT mysql database dump to `/db-schema/schema.sql` inside `bicycleapiframeworkenv_mysql_1` container and import it:
 
 ```
