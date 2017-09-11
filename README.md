@@ -66,7 +66,7 @@ curl request to api example:
 ```
 curl -X POST \
   http://localhost:8080/transaction/test@example.com \
-  -H 'authorization: Basic aW5ub3ZlY3M6aW5ub3ZlY3M=' \
+  -H 'authorization: Basic YmljeWNsZTpiaWN5Y2xl' \
   -H 'cache-control: no-cache' \
   -H 'content-type: application/json' \
   -d '{
