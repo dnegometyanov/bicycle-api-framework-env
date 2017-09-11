@@ -1,0 +1,91 @@
+version: "2"
+
+services:
+    web:
+        build: nginx
+        ports:
+            - "8080:80"
+        volumes:
+            -  ../bicycle-api-framework:/var/www/bicycle-api-framework
+            - ./nginx/site.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+          - logstash
+          - php
+        links:
+            - logstash
+            - php
+        logging:
+            driver: gelf
+            options:
+                gelf-address: "udp://localhost:5000"
+
+    php:
+        build: php7-fpm
+        volumes:
+            -  ../bicycle-api-framework:/var/www/bicycle-api-framework
+        depends_on:
+          - logstash
+          - mysql
+        links:
+            - logstash
+            - mysql
+        logging:
+            driver: gelf
+            options:
+                gelf-address: "udp://localhost:5000"
+    mysql:
+        image: mysql
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: 123456
+        volumes:
+            - ./database/mysql/data:/var/lib/mysql
+            - ./db-schema:/var/dump
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        links:
+           - mysql
+        environment:
+           PMA_HOST: mysql
+           PMA_PORT: 3306
+        ports:
+            - "9090:80"
+
+    ###########
+    # Logging #
+    ###########
+
+    elasticsearch:
+        build: elasticsearch/
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+        expose:
+            - "9200"
+            - "9300"
+        environment:
+            ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+        user: esuser
+        volumes:
+            - ./data/es/:/home/esuser/data
+    logstash:
+        build: logstash/
+        ports:
+            - "5000:5000"
+            - "5000:5000/udp"
+        expose:
+            - "5000"
+        user: lsuser
+        depends_on:
+            - elasticsearch
+        links:
+            - "elasticsearch"
+    kibana:
+        build: kibana/
+        ports:
+            - "5601:5601"
+        user: kbuser
+        depends_on:
+            - elasticsearch
